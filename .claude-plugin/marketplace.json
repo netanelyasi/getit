@@ -10,7 +10,7 @@
       "name": "getit",
       "source": "./",
       "description": "Explain complex things so an ordinary person understands, remembers, and can re-explain them — without distorting the truth.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "license": "MIT",
       "keywords": ["explain", "teaching", "simplify", "clarity", "writing", "learning"]
     }

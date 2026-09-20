@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "getit",
   "description": "Explain complex things so an ordinary person understands, remembers, and can re-explain them — without distorting the truth.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "Netanel Elyasi",
     "url": "https://github.com/netanelyasi"
@@ -11,5 +11,31 @@
   "repository": "https://github.com/netanelyasi/getit",
   "license": "MIT",
   "keywords": ["explain", "teaching", "simplify", "clarity", "writing", "learning"],
-  "skills": ["./"]
+  "skills": ["./"],
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/src/hooks/getit-activate.js\"",
+            "timeout": 5,
+            "statusMessage": "Loading getit..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/src/hooks/getit-tracker.js\"",
+            "timeout": 5,
+            "statusMessage": "Tracking getit mode..."
+          }
+        ]
+      }
+    ]
+  }
 }

@@ -11,7 +11,7 @@ description: Explain complex, technical, abstract, dense, or confusing
 metadata:
   author: Netanel Elyasi
   organization: BrainboxAI
-  version: 1.0.0
+  version: 1.1.0
 name: getit
 license: MIT
 ---
@@ -23,6 +23,20 @@ license: MIT
 GETIT creates **transferable understanding**: after reading the answer
 once, a normal reader should understand the core idea well enough to
 explain it correctly in their own words.
+
+## On / off
+
+When installed as a Claude Code plugin, GETIT is on by default and applies
+to every explanation in every session.
+
+-   `/getit off` turns the flow off for this session and every future
+    session, until `/getit on`.
+-   `/getit on` turns it back on.
+-   `/getit status` reports the current state.
+
+When the user's argument is exactly `on`, `off` or `status`, the plugin
+hook has already recorded the state change. Reply with one short
+confirmation line and nothing else.
 
 ## Prime Directive
 

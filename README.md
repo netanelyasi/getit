@@ -52,6 +52,40 @@ Or just ask. "Explain X", "help me understand Y", "break this down", "what does 
 
 It works in whatever language you write in. Ask in Hebrew, get the answer in Hebrew, same rules.
 
+## Turn it on and off
+
+When installed as a Claude Code plugin, GETIT is on by default and loads at the start of every session. Three commands control it:
+
+```
+/getit off      turn the flow off, now and in future sessions
+/getit on       turn it back on
+/getit status   show the current state
+```
+
+Plain words work too: "getit off" or "stop getit" as the whole message, and "getit on" or "start getit" to restore. The state is saved in `~/.claude/.getit-active`, so it survives restarts. If the file is missing, GETIT is on. While off, a direct `/getit <topic>` still uses the flow for that one answer and leaves the switch off.
+
+The toggle and the status badge only work when GETIT is installed as a Claude Code plugin:
+
+```
+/plugin marketplace add netanelyasi/getit
+/plugin install getit@getit
+```
+
+`npx skills add` and a plain copy into `~/.claude/skills/` install the skill text only. There are no hooks in those installs, so nothing listens for `/getit off`.
+
+### Status line
+
+The plugin writes `~/.claude/status-badges/getit` containing `getit on` or `getit off`. To show it in the Claude Code status line, add this to `~/.claude/settings.json`:
+
+```json
+"statusLine": {
+  "type": "command",
+  "command": "cat ~/.claude/status-badges/getit 2>/dev/null"
+}
+```
+
+A status line tool that already reads `~/.claude/status-badges/*` (such as claude-fuel) shows it automatically. The directory is a generic contract: any tool can drop a one-line file there and a status line can display it.
+
 ## How it works
 
 The skill walks the model through eight steps before it answers:
