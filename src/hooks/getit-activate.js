@@ -3,11 +3,11 @@
 //
 // Runs on every session start (and on resume, /clear and compaction, since
 // Claude Code re-fires SessionStart for those too). It reads the persisted
-// on/off flag, refreshes the status badge, and when getit is on it emits the
-// full SKILL.md as session context so the flow is loaded without the user
-// having to type /getit. Always exits 0.
+// on/off flag and, when getit is on, emits the full SKILL.md as session
+// context so the flow is loaded without the user having to type /getit.
+// Always exits 0.
 
-const { readFlag, writeBadge, readSkill } = require('./getit-state');
+const { readFlag, readSkill } = require('./getit-state');
 
 try {
   // Drain stdin so the parent never blocks on a full pipe. The payload is
@@ -18,7 +18,6 @@ try {
   } catch (e) { /* ignore */ }
 
   const state = readFlag();
-  writeBadge(state);
 
   if (state === 'off') {
     process.stdout.write('GETIT MODE OFF. Explain normally.\n');

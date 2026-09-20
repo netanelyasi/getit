@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 // getit: Claude Code UserPromptSubmit hook.
 //
-// Watches each user prompt for /getit on, /getit off, /getit status and the
-// matching natural-language phrases, persists the state in the flag file,
-// refreshes the status badge, and injects the right context for this turn.
+// Watches each user prompt for /getit on, /getit off, /getit status, the
+// matching natural-language phrases, and /getit statusline on|off|status.
+// It persists the state in the flag file, installs or removes the status
+// line on request, and injects the right context for this turn.
 // Always exits 0 and never throws, even on empty or broken stdin.
 
-const { readFlag, writeFlag, writeBadge, readSkill } = require('./getit-state');
+const { readFlag, writeFlag, readSkill } = require('./getit-state');
+const statusline = require('./getit-statusline-install');
 
 const REINFORCE =
   'GETIT MODE ACTIVE: simplify the explanation, not the truth. ' +
@@ -36,15 +38,18 @@ const NL_OFF = /^(?:please\s+)?(?:getit\s+(?:mode\s+)?(?:off|stop)|stop\s+getit|
 const NL_ON = /^(?:please\s+)?(?:getit\s+(?:mode\s+)?on|start\s+getit|turn\s+on\s+getit(?:\s+mode)?|enable\s+getit)\s*[.!]*$/;
 
 function handle(prompt, skipNaturalLanguage) {
-  let command = null; // 'off' | 'on' | 'status' | 'topic' | null
+  let command = null; // 'off' | 'on' | 'status' | 'statusline' | 'topic' | null
   let topic = '';
+  let sub = '';
 
   const slash = /^\/getit(?::getit)?(?:\s+(.*))?$/.exec(prompt);
   if (slash) {
     const arg = (slash[1] || '').trim();
+    const sl = /^statusline(?:\s+(\S+))?$/.exec(arg);
     if (arg === 'off' || arg === 'stop') command = 'off';
     else if (arg === 'on' || arg === 'start') command = 'on';
     else if (arg === 'status') command = 'status';
+    else if (sl) { command = 'statusline'; sub = sl[1] || ''; }
     else { command = 'topic'; topic = arg; }
   } else if (!skipNaturalLanguage) {
     if (NL_OFF.test(prompt)) command = 'off';
@@ -55,19 +60,25 @@ function handle(prompt, skipNaturalLanguage) {
 
   if (command === 'off') {
     writeFlag('off');
-    writeBadge('off');
     emit(OFF_MSG);
     return;
   }
   if (command === 'on') {
     writeFlag('on');
-    writeBadge('on');
     emit(ON_MSG + '\n\n' + readSkill());
     return;
   }
   if (command === 'status') {
-    writeBadge(state);
     emit('GETIT MODE is ' + state.toUpperCase() + '. Reply with one short line stating that getit is ' + state + ', then do nothing else for this turn.');
+    return;
+  }
+  if (command === 'statusline') {
+    // The status line lives in settings.json. Hooks run as the user, so the
+    // hook edits it directly and the model only confirms in one line.
+    if (sub === 'on' || sub === 'install') emit(statusline.install());
+    else if (sub === 'off' || sub === 'uninstall') emit(statusline.uninstall());
+    else if (sub === '' || sub === 'status') emit(statusline.status());
+    else emit('GETIT: unknown argument "statusline ' + sub + '". Reply with one short line saying the options are /getit statusline on, off or status, then do nothing else for this turn.');
     return;
   }
   if (command === 'topic') {

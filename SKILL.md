@@ -33,10 +33,14 @@ to every explanation in every session.
     session, until `/getit on`.
 -   `/getit on` turns it back on.
 -   `/getit status` reports the current state.
+-   `/getit statusline on` shows `getit on` / `getit off` in the Claude
+    Code status line, keeping whatever status line was there before;
+    `/getit statusline off` restores it.
 
-When the user's argument is exactly `on`, `off` or `status`, the plugin
-hook has already recorded the state change. Reply with one short
-confirmation line and nothing else.
+When the user's argument is exactly `on`, `off` or `status`, or starts
+with `statusline`, the plugin hook has already done the work and tells
+you what happened. Reply with one short confirmation line and nothing
+else.
 
 ## Prime Directive
 

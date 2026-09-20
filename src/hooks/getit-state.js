@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 // getit: shared state helpers for the Claude Code hooks.
 //
-// Two files live under the Claude config directory:
-//   <claudeDir>/.getit-active         "on" or "off". Missing file means on.
-//   <claudeDir>/status-badges/getit   "getit on" or "getit off", one line.
+// One file holds the state under the Claude config directory:
+//   <claudeDir>/.getit-active   "on" or "off". Missing file means on.
 //
-// The status-badges directory is a generic contract: any tool may drop a
-// one-line file there and a status line can display it.
+// The status line script (src/statusline/getit-statusline.js) reads the same
+// flag, so this module is also copied next to it at install time.
 //
 // Every function here is best-effort and never throws. Hooks must exit 0.
 
@@ -15,8 +14,6 @@ const path = require('path');
 const os = require('os');
 
 const FLAG_NAME = '.getit-active';
-const BADGE_DIR = 'status-badges';
-const BADGE_NAME = 'getit';
 const MAX_FLAG_BYTES = 64;
 
 const FALLBACK_SKILL =
@@ -36,10 +33,6 @@ function claudeDir() {
 
 function flagPath() {
   return path.join(claudeDir(), FLAG_NAME);
-}
-
-function badgePath() {
-  return path.join(claudeDir(), BADGE_DIR, BADGE_NAME);
 }
 
 // Returns "off" only when the flag file exists and says so. Anything else
@@ -97,10 +90,6 @@ function writeFlag(state) {
   return atomicWrite(flagPath(), normalizeState(state) + '\n');
 }
 
-function writeBadge(state) {
-  return atomicWrite(badgePath(), 'getit ' + normalizeState(state) + '\n');
-}
-
 // The full SKILL.md text, read at runtime so edits to the source of truth
 // propagate. The hook lives at <plugin_root>/src/hooks/, so SKILL.md is two
 // levels up. Falls back to a one-paragraph summary of the eight steps.
@@ -112,4 +101,4 @@ function readSkill() {
   return FALLBACK_SKILL;
 }
 
-module.exports = { claudeDir, flagPath, badgePath, readFlag, writeFlag, writeBadge, readSkill, FALLBACK_SKILL };
+module.exports = { claudeDir, flagPath, readFlag, writeFlag, atomicWrite, readSkill, FALLBACK_SKILL };

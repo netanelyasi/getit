@@ -64,7 +64,7 @@ When installed as a Claude Code plugin, GETIT is on by default and loads at the 
 
 Plain words work too: "getit off" or "stop getit" as the whole message, and "getit on" or "start getit" to restore. The state is saved in `~/.claude/.getit-active`, so it survives restarts. If the file is missing, GETIT is on. While off, a direct `/getit <topic>` still uses the flow for that one answer and leaves the switch off.
 
-The toggle and the status badge only work when GETIT is installed as a Claude Code plugin:
+The toggle and the status line only work when GETIT is installed as a Claude Code plugin:
 
 ```
 /plugin marketplace add netanelyasi/getit
@@ -75,16 +75,21 @@ The toggle and the status badge only work when GETIT is installed as a Claude Co
 
 ### Status line
 
-The plugin writes `~/.claude/status-badges/getit` containing `getit on` or `getit off`. To show it in the Claude Code status line, add this to `~/.claude/settings.json`:
+One command shows `getit on` or `getit off` under the input box:
 
-```json
-"statusLine": {
-  "type": "command",
-  "command": "cat ~/.claude/status-badges/getit 2>/dev/null"
-}
+```
+/getit statusline on       show the getit state in the status line
+/getit statusline off      put the previous status line back
+/getit statusline          report what is installed
 ```
 
-A status line tool that already reads `~/.claude/status-badges/*` (such as claude-fuel) shows it automatically. The directory is a generic contract: any tool can drop a one-line file there and a status line can display it.
+Claude Code has room for exactly one status line command, so GETIT does not replace yours. It keeps whatever status line you already had, runs it, and appends `getit on` or `getit off` to the end of its first line. If you had none, the line is just `getit on`. The line refreshes after each reply, so the change shows up after the next answer.
+
+What `/getit statusline on` does: it copies two small files into `~/.claude/getit/` (the status line script and the state reader, kept outside the plugin cache so plugin updates cannot break the path), saves your previous status line command in `~/.claude/getit/statusline.json`, and points `statusLine` in `~/.claude/settings.json` at the copied script. Every other setting stays as it was. Before each change, a backup of `settings.json` is written next to it as `settings.json.getit-bak-<timestamp>`.
+
+`/getit statusline off` restores the saved status line, or removes the `statusLine` entry if there was none. The copied files are left in place; they are harmless.
+
+If your previous status line command fails, hangs for more than 3 seconds, or prints nothing, the line falls back to plain `getit on` / `getit off` rather than freezing.
 
 ## How it works
 
