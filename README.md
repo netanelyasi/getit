@@ -119,8 +119,8 @@ The first "before" is accurate but only readable if you already know the terms. 
 
 Other BrainboxAI skills:
 
-- [Brainboxai-IL/tlae](https://github.com/Brainboxai-IL/tlae) — Tech Lead Agentic Engineering, a Claude Code skill that adapts to your stack, risk profile and domain.
-- [Brainboxai-IL/verify-crew](https://github.com/Brainboxai-IL/verify-crew) — separate builder, test-author and verifier agents so the code author never grades its own work.
+- [netanelyasi/tlae](https://github.com/netanelyasi/tlae) — Tech Lead Agentic Engineering, a Claude Code skill that adapts to your stack, risk profile and domain.
+- [netanelyasi/verify-crew](https://github.com/netanelyasi/verify-crew) — separate builder, test-author and verifier agents so the code author never grades its own work.
 
 ## License
 
