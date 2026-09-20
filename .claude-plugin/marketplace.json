@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace-manifest.json",
+  "name": "getit",
+  "owner": {
+    "name": "Netanel Elyasi",
+    "url": "https://github.com/netanelyasi"
+  },
+  "plugins": [
+    {
+      "name": "getit",
+      "source": "./",
+      "description": "Explain complex things so an ordinary person understands, remembers, and can re-explain them — without distorting the truth.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["explain", "teaching", "simplify", "clarity", "writing", "learning"]
+    }
+  ]
+}
