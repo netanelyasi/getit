@@ -1,0 +1,38 @@
+name: Feature request
+description: Suggest a change or addition to getit.
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is missing or annoying today. What can't you do, or do well?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: What you would like to see instead.
+    validations:
+      required: true
+  - type: dropdown
+    id: part
+    attributes:
+      label: Which part
+      options:
+        - SKILL.md text
+        - hooks / on-off toggle
+        - status line
+        - docs
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: simplify-not-truth
+    attributes:
+      label: Does this keep "simplify the explanation, not the truth"
+      description: GETIT's one rule is that simple language never removes a fact, condition, or exception. Explain how your proposal holds to that.
+    validations:
+      required: true
