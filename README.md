@@ -161,6 +161,10 @@ Other BrainboxAI skills:
 - [netanelyasi/tlae](https://github.com/netanelyasi/tlae) — Tech Lead Agentic Engineering, a Claude Code skill that adapts to your stack, risk profile and domain.
 - [netanelyasi/verify-crew](https://github.com/netanelyasi/verify-crew) — separate builder, test-author and verifier agents so the code author never grades its own work.
 
+## Contributing
+
+Bug reports and feature requests use the issue forms: [Bug report](https://github.com/netanelyasi/getit/issues/new?template=bug_report.yml), [Feature request](https://github.com/netanelyasi/getit/issues/new?template=feature_request.yml). See [CONTRIBUTING.md](CONTRIBUTING.md) for how to run tests, branch and commit conventions, and the release process.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).

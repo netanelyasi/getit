@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [20, 22, 24]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: node tests/test_hooks.js
+
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check version fields match
+        run: |
+          node -e "
+          const pkg = require('./package.json');
+          const plugin = require('./.claude-plugin/plugin.json');
+          const marketplace = require('./.claude-plugin/marketplace.json');
+          const marketplaceEntry = (marketplace.plugins || []).find(p => p.name === 'getit');
+
+          const versions = {
+            'package.json': pkg.version,
+            '.claude-plugin/plugin.json': plugin.version,
+            '.claude-plugin/marketplace.json (plugins[getit].version)': marketplaceEntry && marketplaceEntry.version
+          };
+
+          const unique = new Set(Object.values(versions));
+          if (unique.size !== 1) {
+            console.error('Version mismatch across manifest files:');
+            for (const [file, version] of Object.entries(versions)) {
+              console.error('  ' + file + ': ' + version);
+            }
+            console.error('package.json, .claude-plugin/plugin.json, and .claude-plugin/marketplace.json must all carry the same version.');
+            process.exit(1);
+          }
+
+          console.log('Versions match: ' + [...unique][0]);
+          "
