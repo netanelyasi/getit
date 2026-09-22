@@ -16,7 +16,7 @@ v1.1.0 released 2026-09-20. Installable as a Claude Code plugin or via the skill
 
 ## Open and unproven
 
-- The CI matrix has not yet been seen green on `windows-latest` — only reasoned through, not run.
+- CI matrix seen green on PR #1 (Ubuntu + Windows, Node 20/22/24, 2026-09-22).
 - The release workflow has not yet been exercised with a real `vX.Y.Z` tag push.
 
 ## What not to start
